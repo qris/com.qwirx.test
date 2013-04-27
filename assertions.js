@@ -21,6 +21,12 @@ com.qwirx.test.assertThrows = function(type, func, opt_comment)
 	_assert(opt_comment, typeof func == 'function',
 		'Argument passed to assertThrows is not a function');
 	
+	if (opt_comment)
+	{
+		goog.asserts.assertString(opt_comment,
+			'Third argument passed to assertThrows is not a string');
+	}
+	
 	var exception;
 	if (opt_comment)
 	{
