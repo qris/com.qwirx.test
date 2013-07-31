@@ -184,3 +184,78 @@ com.qwirx.test.assertEvents = function(target, types, eventing_callback,
 	
 	return all_events_captured;
 }
+
+/**
+ * @param {number} a The number that should be greater than <code>b</code>.
+ * @param {number} b The number that should be less than <code>a</code>.
+ * @param {string} comment The message if the assertion fails
+ */
+com.qwirx.test.assertGreaterThan = function(a, b, comment)
+{
+	_validateArguments(3, arguments);
+	goog.asserts.assertNumber(a, 'Bad argument to assertGreaterThan' +
+		'(number, number, string)');
+	goog.asserts.assertNumber(b, 'Bad argument to assertGreaterThan' +
+		'(number, number, string)');
+	goog.asserts.assertString(comment, 'Bad argument to assertGreaterThan' +
+		'(number, number, string)');
+	assertTrue(comment, a > b);
+};
+
+/**
+ * Compares two arrays, or array-like objects, ignoring negative indexes
+ * and extra properties on the array objects. Use case: HTMLCollection is
+ * array-like, but it's a pain to call slice on it every time just to compare
+ * it with a real array. {@link assertObjectEquals} doesn't work either.
+ * @param {*} a The expected array (2 args) or the debug message (3 args).
+ * @param {*} b The actual array (2 args) or the expected array (3 args).
+ * @param {*=} opt_c The actual array (3 args only).
+ */
+com.qwirx.test.assertArrayEquals = function(a, b, opt_c)
+{
+	_validateArguments(2, arguments);
+	var v1 = nonCommentArg(1, 2, arguments);
+	var v2 = nonCommentArg(2, 2, arguments);
+	var failureMessage = commentArg(2, arguments) ? commentArg(2, arguments) : '';
+
+	var typeOfVar1 = _trueTypeOf(v1);
+	_assert(failureMessage,
+		'length' in v1,
+		'Expected an array for assertArrayEquals but found a ' + typeOfVar1);
+
+	var typeOfVar2 = _trueTypeOf(v2);
+	_assert(failureMessage,
+		'length' in v2,
+		'Expected an array for assertArrayEquals but found a ' + typeOfVar2);
+
+	assertObjectEquals(failureMessage,
+		Array.prototype.slice.call(v1, 0), Array.prototype.slice.call(v2, 0));
+};
+
+/**
+ * Compares two values, asserting that one is greater than the other.
+ * Generates a more useful message on failure than assertTrue.
+ * @param {*} greater The expected greater value.
+ * @param {*} lesser The expected lesser value.
+ * @param {*=} opt_comment The debug message.
+ */
+com.qwirx.test.assertGreaterThan = function(greater, lesser, opt_comment)
+{
+	var msg = 'Expected ' + _displayStringForValue(greater) + ' to be ' +
+		'greater than ' + _displayStringForValue(lesser);
+	_assert(opt_comment, greater > lesser, msg)
+};
+
+/**
+ * Compares two values, asserting that one is greater than the other.
+ * Generates a more useful message on failure than assertTrue.
+ * @param {*} greater The expected greater value.
+ * @param {*} lesser The expected lesser value.
+ * @param {*=} opt_comment The debug message.
+ */
+com.qwirx.test.assertGreaterThanOrEqual = function(greater, lesser, opt_comment)
+{
+	var msg = 'Expected ' + _displayStringForValue(greater) + ' to be ' +
+		'greater than or equal to ' + _displayStringForValue(lesser);
+	_assert(opt_comment, greater >= lesser, msg)
+};
