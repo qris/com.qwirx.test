@@ -147,7 +147,8 @@ com.qwirx.test.assertEvents = function(target, types, eventing_callback,
 	for (var i = 0; i < types.length; i++)
 	{
 		goog.asserts.assertString(types[i], "You should pass the event's " +
-			".type property to assertEvents(), not class constructors.");
+			".type property (sting value) to assertEvents(), not a " +
+			"class constructor.");
 		var key = goog.events.listen(target, types[i],
 			function(event)
 			{

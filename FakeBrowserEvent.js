@@ -47,6 +47,8 @@ com.qwirx.test.FakeBrowserEvent.wrap = function(target, callback)
 
 com.qwirx.test.FakeBrowserEvent.send = function(type, target, opt_button)
 {
+	assertNotNull(target);
+	
 	com.qwirx.test.FakeBrowserEvent.wrap(target, function(new_target) {
 		if (type instanceof goog.events.Event)
 		{

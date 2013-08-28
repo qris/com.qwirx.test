@@ -73,6 +73,9 @@ com.qwirx.test.FakeClickEvent.send = function(target)
 {
 	var control, element;
 	
+	assertNotNull("A valid event target is required", target);
+	assertNotUndefined("A valid event target is required", target);
+	
 	if (target instanceof goog.ui.Control)
 	{
 		control = target;
