@@ -124,32 +124,33 @@ com.qwirx.test.assertCallback = function(f)
  * for the event.
  * @param {string|Array<string>} type The type(s) of the expected event(s).
  * This is required to listen for event(s).
- * @param {Function eventing_callback The function which should fire the event.
+ * @param {function eventing_callback The function which should fire the event.
  * @param {string=} opt_message The message to display if the event is not
  * fired and <code>opt_continue_if_events_not_sent</code> is false.
  * @param {boolean=} opt_continue_if_events_not_sent Don't fail the test if
  * the specified event(s) are not thrown, but return <code>null</code>
  * instead. This provides a convenient way to temporarily listen for events,
  * although side-effects are possible.
- * @param {boolean=} opt_event_return_value The return value to send from
- * the event handler. <code>true</code> usually means that the event was
- * accepted, <code>false</code> usually means that it was blocked. The
- * default is <code>false</code>.
- * @param {boolean=} opt_stopPropagation Whether to stop the event from
- * propagating to the default event handlers. If not specified, the default
- * is <code>false</code>.
+ * @param {function=} opt_eventHandler An optional callback that receives
+ * each event and can process it. If none is supplied, the handler 
  * @return {goog.events.Event} the array of captured Event objects for
  * further testing, if all were received or
  * <code>opt_continue_if_events_not_sent</code> is <code>true</code>.
  */
 com.qwirx.test.assertEvents = function(target, types, eventing_callback,
-	opt_message, opt_continue_if_events_not_sent, opt_event_return_value,
-	opt_stopPropagation)
+	opt_message, opt_continue_if_events_not_sent, opt_eventHandler)
 {
 	goog.asserts.assertArray(types, "You should pass an array of event " +
 		"type strings to assertEvents(), not class constructors.");
 	goog.asserts.assert(types.length > 0, "You should pass a non-empty " +
 		"array of event type strings to assertEvents()");
+	
+	if (opt_eventHandler)
+	{
+		goog.asserts.assertFunction(opt_eventHandler, "You should pass " +
+			"an event handler function to assertEvents(), or nothing");
+	}
+	
 	var eventMap = {};
 	var all_events_captured = [];
 	
@@ -164,11 +165,15 @@ com.qwirx.test.assertEvents = function(target, types, eventing_callback,
 				var info = eventMap[event.type];
 				info.captured.push(event);
 				all_events_captured.push(event);
-				if (opt_stopPropagation)
+				
+				if (opt_eventHandler)
 				{
-					event.stopPropagation(); // handle the event
+					return opt_eventHandler(event);
 				}
-				return opt_event_return_value;
+				else
+				{
+					return true;
+				}
 			});
 		eventMap[types[i]] = {
 			key: key,
