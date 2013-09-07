@@ -39,9 +39,16 @@ com.qwirx.test.FakeBrowserEvent.wrap = function(target, callback)
 	}
 	catch (e)
 	{
-		wrapper = new com.qwirx.test.FakeBrowserEvent.UnexpectedExceptionThrown(e);
-		wrapper.stack = e.stack;
-		throw wrapper;
+		if (e instanceof com.qwirx.test.FakeBrowserEvent.UnexpectedExceptionThrown)
+		{
+			throw e;
+		}
+		else
+		{
+			wrapper = new com.qwirx.test.FakeBrowserEvent.UnexpectedExceptionThrown(e);
+			wrapper.stack = e.stack;
+			throw wrapper;
+		}
 	}
 };
 
