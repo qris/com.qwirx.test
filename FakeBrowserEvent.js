@@ -46,7 +46,6 @@ com.qwirx.test.FakeBrowserEvent.wrap = function(target, callback)
 		else
 		{
 			wrapper = new com.qwirx.test.FakeBrowserEvent.UnexpectedExceptionThrown(e);
-			wrapper.stack = e.stack;
 			throw wrapper;
 		}
 	}
@@ -77,7 +76,7 @@ com.qwirx.test.FakeBrowserEvent.UnexpectedExceptionThrown = function(exception)
 		"by a browser event handler, which is forbidden: " +
 		exception.message);
 	this.exception = exception;
-	this.stack = exception.stack;
+	this.stack = exception.stack || this.stack;
 };
 goog.inherits(com.qwirx.test.FakeBrowserEvent.UnexpectedExceptionThrown,
 	com.qwirx.util.Exception);
